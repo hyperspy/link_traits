@@ -1,8 +1,8 @@
 # link_traits
 
 
-*link_traits* is a fork of [traitlets'](https://github.com/ipython/traitlets)
-link and dlink functions to enable linking
+**link_traits** is a fork of [traitlets'](https://github.com/ipython/traitlets)
+**link** and **dlink** functions to enable linking
 [traits](https://github.com/enthought/traits) and traits to traitlets.
 
 
