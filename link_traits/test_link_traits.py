@@ -4,7 +4,7 @@
 import traits.api as t
 import pytest
 
-from hyperspy.link_traits.link_traits import dlink, link
+from link_traits import dlink, link
 
 
 class _A(t.HasTraits):
