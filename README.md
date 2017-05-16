@@ -2,8 +2,8 @@
 
 
 **link_traits** is a fork of [traitlets'](https://github.com/ipython/traitlets)
-**link** and **dlink** functions to enable linking
-[traits](https://github.com/enthought/traits) and traits to traitlets.
+**link** and **dlink** functions to add the ability to link
+[traits](https://github.com/enthought/traits) in addition to traitlets.
 
 
 ## Installation
