@@ -8,9 +8,9 @@ python:
 sudo: false
 install:
     - pip install .[test]
-    - pip install pytest-cov codecov --upgrade
+    - pip install pytest-cov codecov traitlets --upgrade
 script:
-    - py.test --cov link_traits -v link_traits
+    - py.test --cov=link_traits -v --pyargs link_traits
 after_success:
     - codecov
 matrix:
