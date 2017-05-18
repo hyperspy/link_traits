@@ -4,7 +4,6 @@
 
 import contextlib
 
-import traitlets
 import traits.api as t
 UNDEFINED = (t.Undefined, None)
 try:
