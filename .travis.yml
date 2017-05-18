@@ -10,7 +10,7 @@ install:
     - pip install .[test]
     - pip install pytest-cov codecov --upgrade
 script:
-    - py.test --cov traitlets -v traitlets
+    - py.test --cov link_traits -v link_traits
 after_success:
     - codecov
 matrix:
