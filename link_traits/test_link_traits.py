@@ -62,7 +62,7 @@ class TestLinkBidirectional:
         assert a.value == b.count
 
     @pytest.mark.parametrize("A, B", ab)
-    def test_unlink(self, A, B):
+    def test_unlink_link(self, A, B):
         """Verify two linked traitlets can be unlinked."""
 
         a = A(value=9)
@@ -76,6 +76,10 @@ class TestLinkBidirectional:
         # Change one of the values to make sure they don't stay in sync.
         a.value = 5
         assert a.value != b.value
+        c.link()
+        a.value = b.value
+        a.value += 1
+        a.value = b.value
 
     @pytest.mark.parametrize("A, B", ab)
     def test_callbacks(self, A, B):
@@ -112,6 +116,28 @@ class TestLinkBidirectional:
         assert ''.join(callback_count) == 'ab'
         del callback_count[:]
 
+    @pytest.mark.parametrize("A, B", ab)
+    def test_tranform(self, A, B):
+        """Test transform link."""
+
+        # Create two simple classes with Int traitlets.
+        a = A(value=9)
+        b = B(value=8)
+
+        # Conenct the two classes.
+        c = link((a, 'value'), (b, 'value'),
+                 transform=(lambda x: 2 * x, lambda x: int(x / 2.)))
+
+        # Make sure the values are correct at the point of linking.
+        b.value = 2 * a.value
+
+        # Change one the value of the source and check that it modifies the target.
+        a.value = 5
+        b.value = 10
+        # Change one the value of the target and check that it modifies the
+        # source.
+        b.value = 6
+        a.value = 3
 
 class TestDirectionalLink:
 
@@ -184,7 +210,7 @@ class TestDirectionalLink:
         assert a.value == 5
 
     @pytest.mark.parametrize("A, B", ab)
-    def test_unlink(self, A, B):
+    def test_unlink_link(self, A, B):
         """Verify two linked traitlets can be unlinked."""
 
         a = A(value=9)
@@ -198,3 +224,7 @@ class TestDirectionalLink:
         # Change one of the values to make sure they don't stay in sync.
         a.value = 5
         assert a.value != b.value
+        c.link()
+        a.value == b.value
+        a.value += 1
+        a.value == b.value
