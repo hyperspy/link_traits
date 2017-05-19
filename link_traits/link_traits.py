@@ -173,7 +173,6 @@ class dlink:
     link
 
     """
-    updating = False
 
     def __init__(self, source, target, transform=None):
         self._transform = transform if transform else lambda x: x
@@ -197,28 +196,14 @@ class dlink:
                     "source must contains either enthought traits or "
                     "traitlets.")
 
-    @contextlib.contextmanager
-    def _busy_updating(self):
-        self.updating = True
-        try:
-            yield
-        finally:
-            self.updating = False
-
     def _update(self, change):
-        if self.updating:
-            return
-        with self._busy_updating():
-            setattr(self.target[0], self.target[1],
-                    self._transform(change.new))
+        setattr(self.target[0], self.target[1],
+                self._transform(change.new))
 
     def _update_traits(self, name, new):
-        if self.updating:
-            return
-        with self._busy_updating():
-            if new is t.Undefined and has_traitlets(self.target[0]):
-                new = self.target[0].traits()[self.target[1]].default_value
-            setattr(self.target[0], self.target[1], self._transform(new))
+        if new is t.Undefined and has_traitlets(self.target[0]):
+            new = self.target[0].traits()[self.target[1]].default_value
+        setattr(self.target[0], self.target[1], self._transform(new))
 
     def unlink(self):
         if has_traits(self.source[0]):
