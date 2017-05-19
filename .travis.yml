@@ -14,6 +14,7 @@ install:
 script:
     - py.test --cov=link_traits -v --pyargs link_traits
 after_success:
+    - py.test --cov=./
     - codecov
 matrix:
     allow_failures:
