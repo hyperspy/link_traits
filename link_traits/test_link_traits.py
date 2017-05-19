@@ -219,6 +219,16 @@ class TestLinkBidirectional:
         with pytest.raises(t.TraitError):
             b.value = 2
 
+    def test_no_traits(self, A=_A):
+        a = A()
+        class B:
+            value = 3
+        b = B()
+        with pytest.raises(ValueError):
+            l = link((a, "value"), (b, "value"))
+        with pytest.raises(ValueError):
+            l = link((b, "value"), (a, "value"))
+
 
 
 class TestDirectionalLink:
@@ -350,3 +360,11 @@ class TestDirectionalLink:
         assert a.value != b.value
         del a.value # Reset trait (to Undefined in this case)
         assert b.value is t.Undefined
+
+    def test_no_traits(self, A=_A):
+        a = A()
+        class B:
+            value = 3
+        b = B()
+        with pytest.raises(ValueError):
+            l = dlink((b, "value"), (a, "value"))
