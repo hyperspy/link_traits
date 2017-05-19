@@ -19,11 +19,11 @@ pip install link_traits
 ```
 
 **link_traits** depends on **traits** which is not a pure Python package. In
-[Anaconda](http://continuum.io/anaconda) you can install traits from
-conda forge before install **link_traits** as above:
+[Anaconda](http://continuum.io/anaconda) you can install link_traits and
+traits as follows:
 
 ```bash
-conda install traits -c conda-forge
+conda install link_traits -c conda-forge
 
 ```
 
