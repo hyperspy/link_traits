@@ -1,0 +1,20 @@
+language: python
+python:
+    - 2.7
+    - "nightly"
+    - 3.5
+    - 3.4
+    - 3.3
+    - 3.6-dev
+sudo: false
+install:
+    - pip install --upgrade pip
+    - pip install .[test]
+    - pip install pytest-cov codecov traitlets --upgrade
+script:
+    - py.test --cov=link_traits -v --pyargs link_traits
+after_success:
+    - codecov
+matrix:
+    allow_failures:
+        - python: "nightly"

@@ -1,4 +1,6 @@
 # link_traits
+[![Build Status](https://travis-ci.org/hyperspy/link_traits.svg?branch=master)](https://travis-ci.org/hyperspy/link_traits)
+
 
 
 **link_traits** is a fork of [traitlets'](https://github.com/ipython/traitlets)
