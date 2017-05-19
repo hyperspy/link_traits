@@ -139,6 +139,27 @@ class TestLinkBidirectional:
         b.value = 6
         a.value = 3
 
+
+    @pytest.mark.parametrize("A, B", ab)
+    def test_link_broken_at_source(self, A, B):
+        a = A()
+        b = A()
+        dl = dlink((b, "value"), (a, "value"), transform=lambda x: x**2)
+        l = link((a, "value"), (b, "value"))
+        with pytest.raises(t.TraitError):
+            a.value = 2
+
+    @pytest.mark.parametrize("A, B", ab)
+    def test_link_broken_at_target(self, A, B):
+        a = A()
+        b = A()
+        dl = dlink((a, "value"), (b, "value"), transform=lambda x: x**2)
+        l = link((a, "value"), (b, "value"))
+        with pytest.raises(t.TraitError):
+            b.value = 2
+
+
+
 class TestDirectionalLink:
 
     @pytest.mark.parametrize("A, B", ab)

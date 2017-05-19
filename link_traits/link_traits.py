@@ -16,6 +16,9 @@ except ImportError:
     def has_traitlets(obj):
         return False
 
+# Raise exception instead of logging them
+t.push_exception_handler(reraise_exceptions=True)
+
 
 def has_traits(obj):
     return isinstance(obj, t.HasTraits)
@@ -79,6 +82,18 @@ class link:
                 raise ValueError(
                     "target must contains either traits or traitlets.")
 
+    def _check_source_consistency(self, value):
+        if getattr(self.source[0], self.source[1]) != value:
+            raise t.TraitError(
+                "Broken link {}: the source value changed while updating "
+                "the target.".format(self))
+
+    def _check_target_consistency(self, value):
+        if getattr(self.target[0], self.target[1]) != value:
+            raise t.TraitError(
+                "Broken link {}: the target value changed while updating "
+                "the source.".format(self))
+
     @contextlib.contextmanager
     def _busy_updating(self):
         self.updating = True
@@ -93,10 +108,8 @@ class link:
         with self._busy_updating():
             setattr(self.target[0], self.target[1],
                     self._transform(change.new))
-            if getattr(self.source[0], self.source[1]) != change.new:
-                raise TraitError(
-                    "Broken link {}: the source value changed while updating "
-                    "the target.".format(self))
+
+            self._check_source_consistency(value=change.new)
 
     def _update_source(self, change):
         if self.updating:
@@ -104,10 +117,7 @@ class link:
         with self._busy_updating():
             setattr(self.source[0], self.source[1],
                     self._transform_inv(change.new))
-            if getattr(self.target[0], self.target[1]) != change.new:
-                raise TraitError(
-                    "Broken link {}: the target value changed while updating "
-                    "the source.".format(self))
+            self._check_target_consistency(value=change.new)
 
     def _update_target_traits(self, new):
         if self.updating:
@@ -116,6 +126,7 @@ class link:
             if new is t.Undefined and has_traitlets(self.target[0]):
                 new = self.target[0].traits()[self.target[1]].default_value
             setattr(self.target[0], self.target[1], new)
+            self._check_source_consistency(value=new)
 
     def _update_source_traits(self, new):
         if self.updating:
@@ -124,6 +135,7 @@ class link:
             if new is t.Undefined and has_traitlets(self.source[0]):
                 new = self.source[0].traits()[self.source[1]].default_value
             setattr(self.source[0], self.source[1], new)
+            self._check_target_consistency(value=new)
 
     def unlink(self):
         if isinstance(self.source[0], t.HasTraits):
