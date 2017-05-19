@@ -4,11 +4,11 @@
 import traits.api as t
 import pytest
 
-from link_traits import dlink, link
+from link_traits import dlink, link, has_traits, has_traitlets
 
 
 class _A(t.HasTraits):
-    value = t.Int()
+    value = t.Int(t.Undefined)
     count = t.Int()
 try:
     import traitlets
@@ -16,7 +16,7 @@ try:
     class _B(traitlets.HasTraits):
         value = traitlets.Int()
         count = traitlets.Int()
-    ab = ((_A, _A), (_A, _B), (_B, _B))
+    ab = ((_A, _A), (_A, _B), (_B, _A), (_B, _B))
 except ImportError:
     ab = (_A, _A)
 
@@ -41,6 +41,67 @@ class TestLinkBidirectional:
         assert a.value == b.value
         b.value = 6
         assert a.value == b.value
+
+    def test_connect_same_trait_source_undefined(self, A=_A, B=_B):
+        """Verify two traitlets of the same type can be linked together using link."""
+
+        a = A() # a.value is Undefined
+        b = B(value=8)
+
+        # Conenct the two classes.
+        c = link((a, 'value'), (b, 'value'))
+        # Linking doesn't change b.value because a.value is undefined
+        assert b.value == 8
+
+        # Change one of the values to make sure they stay in sync.
+        a.value = 5
+        assert a.value == b.value
+        b.value = 6
+        assert a.value == b.value
+        del a.value # Reset trait (to Undefined in this case)
+        if has_traitlets(b):
+            # linking sets b.value to 0 if it has traitlets
+            assert b.value == 0
+        else:
+            assert b.value is t.Undefined
+
+    def test_connect_same_trait_target_undefined(self, A=_B, B=_A):
+        """Verify two traitlets of the same type can be linked together using link."""
+
+        a = A(value=9)
+        b = B() # b.value is Undefined
+
+        # Conenct the two classes.
+        c = link((a, 'value'), (b, 'value'))
+        assert b.value == 9
+        # Change one of the values to make sure they stay in sync.
+        a.value = 5
+        assert a.value == b.value
+        b.value = 6
+        assert a.value == b.value
+        del b.value # Reset trait (to Undefined in this case)
+        if has_traitlets(a):
+            # linking sets b.value to 0 if it has traitlets
+            assert a.value == 0
+        else:
+            assert a.value is t.Undefined
+
+    def test_connect_same_trait_target_undefined_source_trait(self, A=_A, B=_A):
+        """Verify two traitlets of the same type can be linked together using link."""
+
+        a = A(value=9)
+        b = B() # b.value is Undefined
+
+        # Conenct the two classes.
+        c = link((a, 'value'), (b, 'value'))
+        assert b.value == 9
+        # Change one of the values to make sure they stay in sync.
+        a.value = 5
+        assert a.value == b.value
+        b.value = 6
+        assert a.value == b.value
+        del b.value # Reset trait (to Undefined in this case)
+        assert a.value is t.Undefined
 
     @pytest.mark.parametrize("A, B", ab)
     def test_link_different(self, A, B):
@@ -249,3 +310,43 @@ class TestDirectionalLink:
         a.value == b.value
         a.value += 1
         a.value == b.value
+
+    def test_connect_same_trait_source_undefined(self, A=_A, B=_B):
+        """Verify two traitlets of the same type can be linked together using link."""
+
+        a = A() # a.value is Undefined
+        b = B(value=8)
+
+        # Conenct the two classes.
+        c = dlink((a, 'value'), (b, 'value'))
+        # Linking doesn't change b.value because a.value is undefined
+        assert b.value == 8
+
+        # Change one of the values to make sure they stay in sync.
+        a.value = 5
+        assert a.value == b.value
+        b.value = 6
+        assert a.value != b.value
+        del a.value # Reset trait (to Undefined in this case)
+        if has_traitlets(b):
+            # linking sets b.value to 0 if it has traitlets
+            assert b.value == 0
+        else:
+            assert b.value is t.Undefined
+
+    def test_connect_same_trait_target_undefined_target_trait(self, A=_A, B=_A):
+        """Verify two traitlets of the same type can be linked together using link."""
+
+        a = A()
+        b = B(value=9) # b.value is Undefined
+
+        # Conenct the two classes.
+        c = dlink((a, 'value'), (b, 'value'))
+        assert b.value == 9
+        # Change one of the values to make sure they stay in sync.
+        a.value = 5
+        assert a.value == b.value
+        b.value = 6
+        assert a.value != b.value
+        del a.value # Reset trait (to Undefined in this case)
+        assert b.value is t.Undefined
