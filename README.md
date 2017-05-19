@@ -1,6 +1,6 @@
 # link_traits
 [![Build Status](https://travis-ci.org/hyperspy/link_traits.svg?branch=master)](https://travis-ci.org/hyperspy/link_traits)
-[![Codecov branch](https://img.shields.io/codecov/c/github/hyperspy/link_traits/master.svg)]()
+[![Codecov branch](https://img.shields.io/codecov/c/github/hyperspy/link_traits/master.svg)](https://codecov.io/gh/hyperspy/link_traits)
 
 
 
@@ -33,7 +33,7 @@ py.test is required to run the tests.
 
 ```bash
 pip install "link_traits[test]"
-py.test traitlets
+py.test --pyargs traitlets
 ```
 
 ## Usage
