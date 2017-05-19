@@ -1,5 +1,6 @@
 # link_traits
 [![Build Status](https://travis-ci.org/hyperspy/link_traits.svg?branch=master)](https://travis-ci.org/hyperspy/link_traits)
+[![Codecov branch](https://img.shields.io/codecov/c/github/hyperspy/link_traits/master.svg)]()
 
 
 
