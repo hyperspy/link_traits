@@ -2,6 +2,6 @@
 
 """
 
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 
 from .link_traits import link, dlink, has_traits, has_traitlets
