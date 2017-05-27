@@ -23,7 +23,7 @@ pip install link_traits
 traits as follows:
 
 ```bash
-conda install link_traits -c conda-forge
+conda install link-traits -c conda-forge
 
 ```
 
