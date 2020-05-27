@@ -18,7 +18,8 @@ try:
         count = traitlets.Int()
     ab = ((_A, _A), (_A, _B), (_B, _A), (_B, _B))
 except ImportError:
-    ab = (_A, _A)
+    ab = ((_A, _A),)
+    _B = _A
 
 
 class TestLinkBidirectional:
