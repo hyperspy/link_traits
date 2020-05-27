@@ -11,24 +11,20 @@ from os import path
 here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the README file
-try:
-    import pypandoc
-    long_description = pypandoc.convert('README.md', 'rst')
-except ImportError:
-    with open(path.join(here, 'README.md'), encoding='utf-8') as f:
-        long_description = f.read()
-
+with open("README.md", "r") as fh:
+    long_description = fh.read()
 setup(
     name='link_traits',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='1.0.2',
+    version='1.0.3',
 
     description=('A fork to traitlets\' link and dlink to link traits in '
                  'addition to traitlets.'),
     long_description=long_description,
+    long_description_content_type="text/markdown",
 
     # The project's main homepage.
     url='https://github.com/hyperspy/link_traits',
